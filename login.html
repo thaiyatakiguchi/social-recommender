@@ -1,0 +1,140 @@
+<html lang="en">
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+	<meta name="description" content="">
+	<meta name="author" content="">
+	<!-- <link rel="icon" href="..//favicon.ico"> -->
+
+	<title>Social Recommendation</title>
+
+	<!-- Bootstrap core CSS -->
+	<link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+	<!-- Bootstrap theme -->
+	<link href="./assets/css/signin.css" rel="stylesheet">
+	<link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+			
+		<div class="wrapper">
+			<form class="form-signin">
+				<h3 class="form-signin-heading">Welcome Please sign in</h3>
+				<br>
+				<div class="fb-logout btn " onclick="FB.logout()">Logout</div>
+				<div id="status"></div>
+				<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
+			</form>
+		</div>
+	</div>
+	<div id="fb-root"></div>
+	<script>
+		(function(d, s, id) {
+			var js, fjs = d.getElementsByTagName(s)[0];
+			if (d.getElementById(id)) return;
+			js = d.createElement(s); js.id = id;
+			js.src = 'https://connect.facebook.net/en_GB/sdk.js#xfbml=1&version=v2.11&appId=180374555897705';
+			fjs.parentNode.insertBefore(js, fjs);
+			}(document, 'script', 'facebook-jssdk'));
+	</script>
+	<script src="./assets/js/jquery.min.js"></script>
+	<script src="./assets/js/bootstrap.min.js"></script>
+	<script>
+		function statusChangeCallback(response) {
+			console.log('statusChangeCallback');
+			console.log(response);
+			// The response object is returned with a status field that lets the
+			// app know the current login status of the person.
+			// Full docs on the response object can be found in the documentation
+			// for FB.getLoginStatus().
+			if (response.status === 'connected') {
+			// Logged into your app and Facebook.
+			testAPI();
+			} else {
+			// The person is not logged into your app or we are unable to tell.
+			document.getElementById('status').innerHTML = 'Please log ' +
+				'into this app.';
+			}
+		}
+
+		function checkLoginState() {
+			FB.getLoginStatus(function(response) {
+			statusChangeCallback(response);
+			});
+		}
+
+		window.fbAsyncInit = function() {
+			FB.init({
+			appId            : '180374555897705',
+			autoLogAppEvents : true,
+			xfbml            : true,
+			version          : 'v2.11'
+			});
+
+		FB.getLoginStatus(function(response) {
+      		statusChangeCallback(response);
+			  
+    	});
+		};
+
+		// (function(d, s, id){
+		// 	var js, fjs = d.getElementsByTagName(s)[0];
+		// 	if (d.getElementById(id)) {return;}
+		// 	js = d.createElement(s); js.id = id;
+		// 	js.src = "https://connect.facebook.net/en_US/sdk.js";
+		// 	fjs.parentNode.insertBefore(js, fjs);
+		// }(document, 'script', 'facebook-jssdk'));
+
+		function testAPI() {
+			console.log('Welcome!  Fetching your information.... ');
+			FB.api('/me', function(response) {
+			console.log('Successful login for: ' + response.name);
+			document.getElementById('status').innerHTML =
+				'Thanks for logging in, ' + response.name + '!';
+			
+				window.location.href="makeup.html";
+		});
+	}
+	</script>
+
+<!-- <script>window.fbAsyncInit = function() {
+		FB.init({
+			appId      : "FACEBOOK_APPLICATION_ID", 
+			status     : true, 
+			cookie     : true,
+			xfbml      : true,
+			oauth      : true                    
+		});
+		FB.getLoginStatus(function(response) {
+		if (response && response.status === 'connected') {
+			FB.logout(function(response) {
+			   /** Afer logout, Refresh the Page **/ 
+			   console.log('Logout Successfully.');
+			   document.getElementById('currentStatus').innerHTML='Logout from facebook Successfully.';
+			   //document.location.href='/';
+			   /** Afer logout, Refresh the Page **/                        
+
+			});
+		}else{
+			//document.location.href='/';                    
+			document.getElementById('currentStatus').innerHTML='You are NOT LOGIN in Facebook.';
+			console.log('You are not login in Facebook.')
+		}
+	});
+
+
+	}; 
+
+	(function(d){
+		var js, id = 'facebook-jssdk'; if (d.getElementById(id)) {return;}
+		js = d.createElement('script'); js.id = id; js.async = true;
+		js.src = "//connect.facebook.net/en_US/all.js";
+		d.getElementsByTagName('head')[0].appendChild(js);
+	}(document));
+</script>
+<h2 id="currentStatus">
+Please wait...</h2> -->
+</body>
+</html>
