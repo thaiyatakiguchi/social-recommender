@@ -23,7 +23,7 @@
 			<form class="form-signin">
 				<h3 class="form-signin-heading">Welcome Please sign in</h3>
 				<br>
-				<div class="fb-logout btn " onclick="FB.logout()">Logout</div>
+				<button class="fb-logout btnFb " >Logout</button>
 				<div id="status"></div>
 				<div class="fb-login-button" data-max-rows="1" data-size="large" data-button-type="continue_with" data-show-faces="false" data-auto-logout-link="false" data-use-continue-as="false"></div>
 			</form>
@@ -51,6 +51,9 @@
 			// for FB.getLoginStatus().
 			if (response.status === 'connected') {
 			// Logged into your app and Facebook.
+			localStorage.setItem('response', response.authResponse.accessToken); // write
+			// console.log(localStorage.getItem('token')); // read
+
 			testAPI();
 			} else {
 			// The person is not logged into your app or we are unable to tell.
@@ -59,11 +62,11 @@
 			}
 		}
 
-		function checkLoginState() {
-			FB.getLoginStatus(function(response) {
-			statusChangeCallback(response);
-			});
-		}
+		// function checkLoginState() {
+		// 	FB.getLoginStatus(function(response) {
+		// 	statusChangeCallback(response);
+		// 	});
+		// }
 
 		window.fbAsyncInit = function() {
 			FB.init({
@@ -79,27 +82,45 @@
     	});
 		};
 
-		// (function(d, s, id){
-		// 	var js, fjs = d.getElementsByTagName(s)[0];
-		// 	if (d.getElementById(id)) {return;}
-		// 	js = d.createElement(s); js.id = id;
-		// 	js.src = "https://connect.facebook.net/en_US/sdk.js";
-		// 	fjs.parentNode.insertBefore(js, fjs);
-		// }(document, 'script', 'facebook-jssdk'));
-
 		function testAPI() {
 			console.log('Welcome!  Fetching your information.... ');
-			FB.api('/me', function(response) {
-			console.log('Successful login for: ' + response.name);
+			FB.api('/me?fields=id,name,email,age_range,gender,picture.type(large)', function(response) {
+				console.log(response, "Response object")
+			console.log('Successful login for: ' , response.name);
 			document.getElementById('status').innerHTML =
 				'Thanks for logging in, ' + response.name + '!';
 			
-				window.location.href="makeup.html";
+				// window.location.href="makeup.html";
+			});
+			
+		}
+
+		
+
+		$('.btnFb').on('click', function(){
+			
+				FB.getLoginStatus(function(response) {
+				if (response && response.status === 'connected') {
+					FB.logout(function(response) {
+					/** Afer logout, Refresh the Page **/ 
+					console.log('Logout Successfully.');
+					document.getElementById('currentStatus').innerHTML='Logout from facebook Successfully.';
+					//document.location.href='/';
+					/** Afer logout, Refresh the Page **/                        
+
+					});
+				}else{
+					//document.location.href='/';                    
+					document.getElementById('currentStatus').innerHTML='You are NOT LOGIN in Facebook.';
+					console.log('You are not login in Facebook.')
+				}
+				});
+			
 		});
-	}
 	</script>
 
-<!-- <script>window.fbAsyncInit = function() {
+<!-- <script>
+	window.fbAsyncInit = function() {
 		FB.init({
 			appId      : "FACEBOOK_APPLICATION_ID", 
 			status     : true, 

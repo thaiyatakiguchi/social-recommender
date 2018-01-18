@@ -49,7 +49,7 @@
           </ul>
           <ul class="nav navbar-nav navbar-right">
             <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="./login.html"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+            <li><a href="./login.html"><span class="glyphicon glyphicon-log-out btnFb"></span> Logout</a></li>
           </ul>
       </div>
     </nav>
@@ -76,8 +76,12 @@
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
     <script>
-        var url="http://128.199.251.234:3000/category/1/product";
+        var url="http://128.199.251.234:3000/category/4/product";
         $(document).ready( function(){
+            // console.log(localStorage.getItem('response')); // read
+            var response = localStorage.getItem('response');
+            console.log('this is token response: ' + response);
+            
             $.ajax({
                 type: "GET",
                 url: url,
