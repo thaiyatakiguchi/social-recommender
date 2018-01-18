@@ -59,55 +59,8 @@
         </div>
         <div class="row">
             <div class="col-md-12" style="margin-bottom:15px">
-                <div class="row">
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
-                    <div class="col-md-3">
-                        <a href="#" data-toggle="modal" data-target=".myModal"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%"></a>
-                        <h4 class="text-center">product name</h4>
-                    </div>
+                <div class="row displayResult">
+                    
                 </div>
             </div>
         </div>
@@ -117,27 +70,115 @@
     <div class="modal fade myModal" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog modal-lg" role="document">
             <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    <h4 class="modal-title" id="myModalLabel">Product Name</h4>
-                </div>
-                <div class="modal-body">
-                    <div class=row>
-                        <div class=col-md-6>
-                            <img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail" style="width:100%">
-                            <a href="./socialinteraction.html" type="button" class="btn btn-primary btn-lg" style="width:100%; float:right"><span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>
-                        </div>
-                        <div class="col-md-6">
-                            <p>Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum. Stet clita kasd gubergren, no sea takimata sanctus est Lorem ipsum dolor sit amet. Lorem ipsum dolor sit amet, consetetur sadipscing elitr,  sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.</p>
-                            <button type="button" class="btn btn-success" style="width:100%; float:right"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</button>
-                        </div>
-                    </div>
-                </div>
+                
             </div>
         </div>
     </div>
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
-    
+    <script>
+        var url="http://128.199.251.234:3000/category/3/product?page=1&pageSize=500";
+        $(document).ready( function(){
+            $.ajax({
+                type: "GET",
+                url: url,
+                success: function(res){
+                    var responses = handleData(res);
+                },
+                
+                error: function(err){
+                    alert('Error ', err.status);
+                    return err;
+                }
+            });
+            function handleData(res) {
+                console.log('This is inside if condition '+res.products[0].imageUrl);  
+                if(!res.error){
+                    for (var i = 0; i < res.products.length; i++) {
+                        
+                        var rowValue ='<div class="col-md-3 ">'+
+                                    '<a href="#" data-toggle="modal" data-target=".myModal" class="btnModal" val=' + res.products[i].id + ' >'+
+                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="width:100%"></a>'+
+                                    '<h4 class="text-center">'+ res.products[i].title + '</h4>'+
+                                    '</div>';
+                        
+                        $('.displayResult').append(rowValue);
+                    };
+                }else{
+                    alert(res.error);
+                }
+                $('.btnModal').on("click",function(){
+                    var productVal = $(this).attr("val");
+                    var url = 'http://128.199.251.234:3000/product/'+productVal+'?activityTypeId=1';
+                    console.log('url ='+ url);
+                    $.ajax({
+                        type: "GET",
+                        url: url,
+                        success: function(res){
+                            var product = handleDataModal(res);
+                        },
+                        error: function(err){
+                            alert('Error ', err.status);
+                            return err;
+                        }
+                    });
+                    function handleDataModal(res) { 
+                        if(!res.error){
+                            console.log(res.product);
+                            var rowData = 
+                            '<div class="modal-header">'+
+                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                                '<h4 class="modal-title" id="myModalLabel">'+res.product.title+'</h4>'+
+                            '</div>'+
+                            '<div class="modal-body">'+
+                                '<div class=row>'+
+                                    '<div class=col-md-6>'+
+                                            '<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">'+
+                                            '<a href="./socialinteraction.html" type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
+                                            '<span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>'+
+                                    '</div>'+
+                                    '<div class="col-md-6">'+
+                                        '<h5> Brand: '+res.product.brand.name+'</h5>'+
+                                        '<h4> Price: '+res.product.price+' $</h4>'+
+                                        '<p>'+res.product.description+'</p>'+
+                                        '<button type="button" class="btn btn-success btnBuy" val='+res.product.id+ ' style="width:100%; float:right"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</button>'+
+                                    '</div>'+
+                                '</div>'+
+                            '</div>';
+
+                            $('.modal-content').html(rowData);
+                        }else{
+                            alert(res.error);
+                        }
+                        $('.btnBuy').on("click",function(){
+                            var productId = $(this).attr("val");
+                            var url = 'http://128.199.251.234:3000/product/'+productId+'/cart';
+                            console.log('url ='+ url);
+                            $.ajax({
+                                type: "POST",
+                                url: url,
+                                data:{
+                                    activityTypeId: "2",
+                                    friendId: "2"
+                                },
+                                dataType: "json",
+                                success: function(res){
+                                    alert('Success '+res.status);
+                                    
+                                },
+                                error: function(err){
+                                    alert('Error '+ err.status);
+                                    return err.status;
+                                }
+                                
+                            });
+                            // window.location.href="sport.html";
+                            window.location.reload();
+                        });
+                    };
+                });
+            };
+        });
+    </script>
   </body>
 </html>

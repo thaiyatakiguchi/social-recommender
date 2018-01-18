@@ -121,9 +121,10 @@
         $(document).ready(function(e){
     		$(".img-check").click(function(){
 				$(this).toggleClass("check");
-                var friend = [];
-                friend.push($(this).val());
-                console.log('Friend' + friend);
+                var friend = [{age : 0, name:""}];
+                // friend.push($(this).val());
+                friend.push({age: 35, name: "John Doe"});
+                console.log('Friend: ' + friend[0].name);
 			});
 	});
     </script>
