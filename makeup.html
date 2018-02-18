@@ -1,67 +1,27 @@
 
 <!DOCTYPE html>
 <html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-    <meta name="description" content="">
-    <meta name="author" content="">
-    <!-- <link rel="icon" href="..//favicon.ico"> -->
-
-    <title>Social Recommendation</title>
-
-    <!-- Bootstrap core CSS -->
-    <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-    <!-- Bootstrap theme -->
-    <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
-  </head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Social Recommendation</title>
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+    </head>
   <body>
     <!-- Fixed navbar -->
-    <nav class="navbar navbar-inverse navbar-fixed-top">
-      <div class="container">
-        <div class="navbar-header">
-          <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-            <span class="sr-only">Toggle navigation</span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-            <span class="icon-bar"></span>
-          </button>
-          <a class="navbar-brand" href="#">Thaiya</a>
-        </div>
-          <ul class="nav navbar-nav">
-            <li class="nav-item active">
-                <a class="nav-link" href="./makeup.html">Make up</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./fragrance.html">Fragrance</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./sport.html">Sport</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./bath&body.html">Bath & body</a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="./nail&hand.html">Nails & Hands</a>
-            </li>
-          </ul>
-          <ul class="nav navbar-nav navbar-right">
-            <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
-            <li><a href="./login.html"><span class="glyphicon glyphicon-log-out btnFb"></span> Logout</a></li>
-          </ul>
-      </div>
-    </nav>
+    <div id="includeNav"></div>
     <div class="container" role="main">
         <div class="page-header" style="margin-top:60px">
             <h1>Make up product list</h1><span>Please select the product by clicking on "BUY"</span>
         </div>
         <div class="row">
             <div class="col-md-12" style="margin-bottom:15px">
-                <div class="row displayResult">
-                    
-                </div>
+                <div class="row displayResult"></div>
             </div>
         </div>
     </div> <!-- /container -->
@@ -76,19 +36,27 @@
     <script src="./assets/js/jquery.min.js"></script>
     <script src="./assets/js/bootstrap.min.js"></script>
     <script>
-        var url="http://128.199.251.234:3000/category/4/product";
+        $(function(){
+            $("#includeNav").load("navbar.html");
+        });
+    </script>
+    <script>
         $(document).ready( function(){
+            var obj = '';
             // console.log(localStorage.getItem('response')); // read
-            var response = localStorage.getItem('response');
-            console.log('this is token response: ' + response);
-            
+            var accessToken = 'Bearer ' + localStorage.getItem('response');
+            console.log('this is Access token response: ' + accessToken);
+            var url="http://128.199.251.234:3001/category/4/product";
+            var head = {
+                Authorization:  accessToken
+            };
             $.ajax({
                 type: "GET",
                 url: url,
+                headers: head,
                 success: function(res){
                     var responses = handleData(res);
                 },
-                
                 error: function(err){
                     alert('Error ', err.status);
                     return err;
@@ -110,13 +78,17 @@
                 }else{
                     alert(res.error);
                 }
+                // View product
                 $('.btnModal').on("click",function(){
                     var productVal = $(this).attr("val");
-                    var url = 'http://128.199.251.234:3000/product/'+productVal+'?activityTypeId=1';
-                    console.log('url ='+ url);
+                    var url = 'http://128.199.251.234:3001/product/'+productVal+'?activityTypeId=1';
+                    var head = {
+                        Authorization:  accessToken
+                    };
                     $.ajax({
                         type: "GET",
                         url: url,
+                        headers: head,
                         success: function(res){
                             var product = handleDataModal(res);
                         },
@@ -137,7 +109,7 @@
                                 '<div class=row>'+
                                     '<div class=col-md-6>'+
                                             '<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">'+
-                                            '<a href="./socialinteraction.html" type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
+                                            '<a href=./socialinteraction.html?productId='+res.product.id+' type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
                                             '<span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>'+
                                     '</div>'+
                                     '<div class="col-md-6">'+
@@ -153,30 +125,37 @@
                         }else{
                             alert(res.error);
                         }
+                        // Buy product for yourself
                         $('.btnBuy').on("click",function(){
                             var productId = $(this).attr("val");
-                            var url = 'http://128.199.251.234:3000/product/'+productId+'/cart';
-                            console.log('url ='+ url);
+                            
+                            var url = 'http://128.199.251.234:3001/product/buy';
+                            var head = {
+                                Authorization:  accessToken
+                            };
+                            obj = {
+                                activityTypeId: 3,
+                                productId: parseInt(productId)
+                            };
+                            console.log('this is val id', obj);
                             $.ajax({
                                 type: "POST",
                                 url: url,
-                                data:{
-                                    activityTypeId: "2",
-                                    friendId: "2"
-                                },
-                                dataType: "json",
+                                headers: head,
+                                data: JSON.stringify(obj),
                                 success: function(res){
-                                    alert('Success '+res.status);
+                                    alert('Success ', res);
                                     
                                 },
                                 error: function(err){
-                                    alert('Error '+ err.status);
-                                    return err.status;
+                                    alert('Error ', err);
+                                    window.location.reload();
+                                    // return err.status;
                                 }
                                 
                             });
                             // window.location.href="sport.html";
-                            window.location.reload();
+                            // window.location.reload();
                         });
                     };
                 });
