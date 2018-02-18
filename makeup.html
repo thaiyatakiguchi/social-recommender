@@ -11,6 +11,14 @@
         <title>Social Recommendation</title>
         <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+        <style>
+        .titleMax{
+            width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        </style>
     </head>
   <body>
     <!-- Fixed navbar -->
@@ -43,10 +51,13 @@
     <script>
         $(document).ready( function(){
             var obj = '';
-            // console.log(localStorage.getItem('response')); // read
+            console.log(localStorage.getItem('response')); // read
+            var username = localStorage.getItem('username')
+            var rowUsername = '';
+            $('.displayUsername').append(username);
             var accessToken = 'Bearer ' + localStorage.getItem('response');
             console.log('this is Access token response: ' + accessToken);
-            var url="http://128.199.251.234:3001/category/4/product";
+            var url="http://128.199.251.234:3001/category/4/product?page=1&pageSize=500";
             var head = {
                 Authorization:  accessToken
             };
@@ -67,10 +78,10 @@
                 if(!res.error){
                     for (var i = 0; i < res.products.length; i++) {
                         
-                        var rowValue ='<div class="col-md-3 ">'+
+                        var rowValue ='<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">'+
                                     '<a href="#" data-toggle="modal" data-target=".myModal" class="btnModal" val=' + res.products[i].id + ' >'+
-                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="width:100%"></a>'+
-                                    '<h4 class="text-center">'+ res.products[i].title + '</h4>'+
+                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="height:300px;width:300px"></a>'+
+                                    '<h4 class="text-center titleMax">'+ res.products[i].title + '</h4>'+
                                     '</div>';
                         
                         $('.displayResult').append(rowValue);
@@ -129,7 +140,7 @@
                         $('.btnBuy').on("click",function(){
                             var productId = $(this).attr("val");
                             
-                            var url = 'http://128.199.251.234:3001/product/buy';
+                            var purl = "http://128.199.251.234:3001/product/buy";
                             var head = {
                                 Authorization:  accessToken
                             };
@@ -140,7 +151,7 @@
                             console.log('this is val id', obj);
                             $.ajax({
                                 type: "POST",
-                                url: url,
+                                url: purl,
                                 headers: head,
                                 data: JSON.stringify(obj),
                                 success: function(res){
@@ -148,8 +159,9 @@
                                     
                                 },
                                 error: function(err){
-                                    alert('Error ', err);
-                                    window.location.reload();
+                                    // var err = jqXHR;
+                                    alert(err.status);
+                                    //window.location.reload();
                                     // return err.status;
                                 }
                                 

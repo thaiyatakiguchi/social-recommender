@@ -1,17 +1,25 @@
 
 <!DOCTYPE html>
 <html lang="en">
-        <head>
-                <meta charset="utf-8">
-                <meta http-equiv="X-UA-Compatible" content="IE=edge">
-                <meta name="viewport" content="width=device-width, initial-scale=1">
-                <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
-                <meta name="description" content="">
-                <meta name="author" content="">
-                <title>Social Recommendation</title>
-                <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
-                <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
-            </head>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Social Recommendation</title>
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+        <style>
+        .titleMax{
+            width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        </style>
+    </head>
     <body>
     <!-- Fixed navbar -->
     <div id="includeNav"></div>
@@ -44,15 +52,25 @@
         });
     </script>
     <script>
-        var url="http://128.199.251.234:3000/category/3/product?page=1&pageSize=500";
         $(document).ready( function(){
+            var obj = '';
+            console.log(localStorage.getItem('response')); // read
+            var username = localStorage.getItem('username')
+            var rowUsername = '';
+            $('.displayUsername').append(username);
+            var accessToken = 'Bearer ' + localStorage.getItem('response');
+            console.log('this is Access token response: ' + accessToken);
+            var url="http://128.199.251.234:3001/category/3/product?page=1&pageSize=500";
+            var head = {
+                Authorization:  accessToken
+            };
             $.ajax({
                 type: "GET",
                 url: url,
+                headers: head,
                 success: function(res){
                     var responses = handleData(res);
                 },
-                
                 error: function(err){
                     alert('Error ', err.status);
                     return err;
@@ -63,10 +81,10 @@
                 if(!res.error){
                     for (var i = 0; i < res.products.length; i++) {
                         
-                        var rowValue ='<div class="col-md-3 ">'+
+                        var rowValue ='<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">'+
                                     '<a href="#" data-toggle="modal" data-target=".myModal" class="btnModal" val=' + res.products[i].id + ' >'+
-                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="width:100%"></a>'+
-                                    '<h4 class="text-center">'+ res.products[i].title + '</h4>'+
+                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="height:300px;width:300px"></a>'+
+                                    '<h4 class="text-center titleMax">'+ res.products[i].title + '</h4>'+
                                     '</div>';
                         
                         $('.displayResult').append(rowValue);
@@ -74,13 +92,17 @@
                 }else{
                     alert(res.error);
                 }
+                // View product
                 $('.btnModal').on("click",function(){
                     var productVal = $(this).attr("val");
-                    var url = 'http://128.199.251.234:3000/product/'+productVal+'?activityTypeId=1';
-                    console.log('url ='+ url);
+                    var url = 'http://128.199.251.234:3001/product/'+productVal+'?activityTypeId=1';
+                    var head = {
+                        Authorization:  accessToken
+                    };
                     $.ajax({
                         type: "GET",
                         url: url,
+                        headers: head,
                         success: function(res){
                             var product = handleDataModal(res);
                         },
@@ -101,7 +123,7 @@
                                 '<div class=row>'+
                                     '<div class=col-md-6>'+
                                             '<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">'+
-                                            '<a href="./socialinteraction.html" type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
+                                            '<a href=./socialinteraction.html?productId='+res.product.id+' type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
                                             '<span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>'+
                                     '</div>'+
                                     '<div class="col-md-6">'+
@@ -117,30 +139,35 @@
                         }else{
                             alert(res.error);
                         }
+                        // Buy product for yourself
                         $('.btnBuy').on("click",function(){
                             var productId = $(this).attr("val");
-                            var url = 'http://128.199.251.234:3000/product/'+productId+'/cart';
-                            console.log('url ='+ url);
+                            
+                            var purl = "http://128.199.251.234:3001/product/buy";
+                            var head = {
+                                Authorization:  accessToken
+                            };
+                            obj = {
+                                activityTypeId: 3,
+                                productId: parseInt(productId)
+                            };
+                            console.log('this is val id', obj);
                             $.ajax({
                                 type: "POST",
-                                url: url,
-                                data:{
-                                    activityTypeId: "2",
-                                    friendId: "2"
-                                },
-                                dataType: "json",
+                                url: purl,
+                                headers: head,
+                                data: JSON.stringify(obj),
                                 success: function(res){
-                                    alert('Success '+res.status);
-                                    
+                                    alert('Success ', res);
                                 },
                                 error: function(err){
-                                    alert('Error '+ err.status);
-                                    return err.status;
+                                    // var err = jqXHR;
+                                    alert(err.status);
+                                    //window.location.reload();
+                                    // return err.status;
                                 }
                                 
                             });
-                            // window.location.href="sport.html";
-                            window.location.reload();
                         });
                     };
                 });

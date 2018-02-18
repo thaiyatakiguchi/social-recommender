@@ -114,7 +114,10 @@
 				function handleData(res){
 					if(!res.error){
 						localStorage.setItem('response', res.accessToken);
-						window.location.href = "makeup.html";
+						localStorage.setItem('username', obj.name);
+						localStorage.setItem('userImage', obj.imageUrl);
+						console.log('this is the name of the user ', obj.name, obj.imageUrl);
+						window.location.href = "index.html";
                     }else{
 						alert(res.error)
                     }

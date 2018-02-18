@@ -27,8 +27,8 @@
                     </div>
                     <div class="col-md-6">
                         <div class="row">
-                            <div class="col-md-4">
-                                <label class="btn btn-primary"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail img-check" style="width:100%"><input type="checkbox" name="chk1" id="item4" value="val1" class="hidden" autocomplete="off"></label>
+                            <div class="col-md-4 displayFriendResult">
+                                
                             </div>
                             <div class="col-md-4">
                                 <label class="btn btn-primary"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail img-check" style="width:100%"><input type="checkbox" name="chk1" id="item4" value="val1" class="hidden" autocomplete="off"></label>
@@ -96,7 +96,7 @@
             var productUrl = 'http://128.199.251.234:3001/product/'+productId+'?activityTypeId=1';
             //get friend
             var url = "";
-            var friendUrl = "http://128.199.251.234:3001/category/4/product";
+            var friendUrl = "http://128.199.251.234:3001/user/friends";
             //post share url
             var shareUrl = "http://128.199.251.234:3001/";
             //post ask url
@@ -124,19 +124,19 @@
                     return err;
                 }
             });
-            // ajax get user Friends
-            // $.ajax({
-            //     type: "POST",
-            //     url: friendUrl,
-            //     headers: head,
-            //     success: function(res){
-            //         var responses = handleFriendData(res);
-            //     },
-            //     error: function(err){
-            //         alert('Error ', err.status);
-            //         return err;
-            //     }
-            // });
+            //ajax get user Friends
+            $.ajax({
+                type: "GET",
+                url: friendUrl,
+                headers: head,
+                success: function(res){
+                    var responses = handleFriendData(res);
+                },
+                error: function(err){
+                    alert('Error ', err.status);
+                    return err;
+                }
+            });
             function handleData(res) {
                 if(!res.error){
                     var rowValue ='<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">';
@@ -147,8 +147,9 @@
             };
             function handleFriendData(res) {
                 if(!res.error){
-                    var rowValue ='<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">';
-                    $('.displayProductResult').append(rowValue);
+                    console.log(res);
+                    var rowValue ='<label class="btn btn-primary"><img src="./assets/img/200x200.svg" class="img-responsive img-thumbnail img-check" style="width:100%"><input type="checkbox" name="chk1" id="item4" value="val1" class="hidden" autocomplete="off"></label>';
+                    $('.displayFriendResult').append(rowValue);
                 }else{
                     alert(res.error);
                 }

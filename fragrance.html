@@ -11,6 +11,14 @@
         <title>Social Recommendation</title>
         <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
         <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+        <style>
+        .titleMax{
+            width: 250px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        </style>
     </head>
     <body>
     <!-- Fixed navbar -->
@@ -44,108 +52,127 @@
         });
     </script>
     <script>
-        var url="http://128.199.251.234:3000/category/2/product?page=1&pageSize=500";
-        $(document).ready( function(){
-            $.ajax({
-                type: "GET",
-                url: url,
-                success: function(res){
-                    var responses = handleData(res);
-                },
-                
-                error: function(err){
-                    alert('Error ', err.status);
-                    return err;
-                }
-            });
-            function handleData(res) {
-                console.log('This is inside if condition '+res.products[0].imageUrl);  
-                if(!res.error){
-                    for (var i = 0; i < res.products.length; i++) {
-                        
-                        var rowValue ='<div class="col-md-3 ">'+
-                                    '<a href="#" data-toggle="modal" data-target=".myModal" class="btnModal" val=' + res.products[i].id + ' >'+
-                                    '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="width:100%"></a>'+
-                                    '<h4 class="text-center">'+ res.products[i].title + '</h4>'+
-                                    '</div>';
-                        
-                        $('.displayResult').append(rowValue);
-                    };
-                }else{
-                    alert(res.error);
-                }
-                $('.btnModal').on("click",function(){
-                    var productVal = $(this).attr("val");
-                    var url = 'http://128.199.251.234:3000/product/'+productVal+'?activityTypeId=1';
-                    console.log('url ='+ url);
-                    $.ajax({
-                        type: "GET",
-                        url: url,
-                        success: function(res){
-                            var product = handleDataModal(res);
-                        },
-                        error: function(err){
-                            alert('Error ', err.status);
-                            return err;
-                        }
-                    });
-                    function handleDataModal(res) { 
-                        if(!res.error){
-                            console.log(res.product);
-                            var rowData = 
-                            '<div class="modal-header">'+
-                                '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
-                                '<h4 class="modal-title" id="myModalLabel">'+res.product.title+'</h4>'+
-                            '</div>'+
-                            '<div class="modal-body">'+
-                                '<div class=row>'+
-                                    '<div class=col-md-6>'+
-                                            '<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">'+
-                                            '<a href="./socialinteraction.html" type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
-                                            '<span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>'+
-                                    '</div>'+
-                                    '<div class="col-md-6">'+
-                                        '<h5> Brand: '+res.product.brand.name+'</h5>'+
-                                        '<h4> Price: '+res.product.price+' $</h4>'+
-                                        '<p>'+res.product.description+'</p>'+
-                                        '<button type="button" class="btn btn-success btnBuy" val='+res.product.id+ ' style="width:100%; float:right"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</button>'+
-                                    '</div>'+
-                                '</div>'+
-                            '</div>';
-
-                            $('.modal-content').html(rowData);
-                        }else{
-                            alert(res.error);
-                        }
-                        $('.btnBuy').on("click",function(){
-                            var productId = $(this).attr("val");
-                            var url = 'http://128.199.251.234:3000/product/'+productId+'/cart';
-                            console.log('url ='+ url);
-                            $.ajax({
-                                type: "POST",
-                                url: url,
-                                data:{
-                                    activityTypeId: "2",
-                                    friendId: "2"
-                                },
-                                dataType: "json",
-                                success: function(res){
-                                    alert('Success '+res.status);
-                                    
-                                },
-                                error: function(err){
-                                    alert('Error '+ err.status);
-                                    return err.status;
-                                }
-                                
-                            });
-                            // window.location.href="sport.html";
-                            window.location.reload();
-                        });
-                    };
+            $(document).ready( function(){
+                var obj = '';
+                console.log(localStorage.getItem('response')); // read
+                var username = localStorage.getItem('username')
+                var rowUsername = '';
+                $('.displayUsername').append(username);
+                var accessToken = 'Bearer ' + localStorage.getItem('response');
+                console.log('this is Access token response: ' + accessToken);
+                var url="http://128.199.251.234:3001/category/2/product?page=1&pageSize=500";
+                var head = {
+                    Authorization:  accessToken
+                };
+                $.ajax({
+                    type: "GET",
+                    url: url,
+                    headers: head,
+                    success: function(res){
+                        var responses = handleData(res);
+                    },
+                    error: function(err){
+                        alert('Error ', err.status);
+                        return err;
+                    }
                 });
-            };
-        });
-    </script>
+                function handleData(res) {
+                    console.log('This is inside if condition '+res.products[0].imageUrl);  
+                    if(!res.error){
+                        for (var i = 0; i < res.products.length; i++) {
+                            
+                            var rowValue ='<div class="col-xs-12 col-sm-4 col-md-3 col-lg-3">'+
+                                        '<a href="#" data-toggle="modal" data-target=".myModal" class="btnModal" val=' + res.products[i].id + ' >'+
+                                        '<img src=' + res.products[i].imageUrl + ' class="img-responsive img-thumbnail" style="height:300px;width:300px"></a>'+
+                                        '<h4 class="text-center titleMax">'+ res.products[i].title + '</h4>'+
+                                        '</div>';
+                            
+                            $('.displayResult').append(rowValue);
+                        };
+                    }else{
+                        alert(res.error);
+                    }
+                    // View product
+                    $('.btnModal').on("click",function(){
+                        var productVal = $(this).attr("val");
+                        var url = 'http://128.199.251.234:3001/product/'+productVal+'?activityTypeId=1';
+                        var head = {
+                            Authorization:  accessToken
+                        };
+                        $.ajax({
+                            type: "GET",
+                            url: url,
+                            headers: head,
+                            success: function(res){
+                                var product = handleDataModal(res);
+                            },
+                            error: function(err){
+                                alert('Error ', err.status);
+                                return err;
+                            }
+                        });
+                        function handleDataModal(res) { 
+                            if(!res.error){
+                                console.log(res.product);
+                                var rowData = 
+                                '<div class="modal-header">'+
+                                    '<button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>'+
+                                    '<h4 class="modal-title" id="myModalLabel">'+res.product.title+'</h4>'+
+                                '</div>'+
+                                '<div class="modal-body">'+
+                                    '<div class=row>'+
+                                        '<div class=col-md-6>'+
+                                                '<img src='+res.product.imageUrl+' class="img-responsive img-thumbnail" style="width:100%">'+
+                                                '<a href=./socialinteraction.html?productId='+res.product.id+' type="button" class="btn btn-primary btn-lg" style="width:100%; float:right">'+
+                                                '<span class="glyphicon glyphicon-bullhorn"></span> Social interaction</a>'+
+                                        '</div>'+
+                                        '<div class="col-md-6">'+
+                                            '<h5> Brand: '+res.product.brand.name+'</h5>'+
+                                            '<h4> Price: '+res.product.price+' $</h4>'+
+                                            '<p>'+res.product.description+'</p>'+
+                                            '<button type="button" class="btn btn-success btnBuy" val='+res.product.id+ ' style="width:100%; float:right"><span class="glyphicon glyphicon-shopping-cart"></span> Buy</button>'+
+                                        '</div>'+
+                                    '</div>'+
+                                '</div>';
+    
+                                $('.modal-content').html(rowData);
+                            }else{
+                                alert(res.error);
+                            }
+                            // Buy product for yourself
+                            $('.btnBuy').on("click",function(){
+                                var productId = $(this).attr("val");
+                                
+                                var purl = "http://128.199.251.234:3001/product/buy";
+                                var head = {
+                                    Authorization:  accessToken
+                                };
+                                obj = {
+                                    activityTypeId: 3,
+                                    productId: parseInt(productId)
+                                };
+                                console.log('this is val id', obj);
+                                $.ajax({
+                                    type: "POST",
+                                    url: purl,
+                                    headers: head,
+                                    data: JSON.stringify(obj),
+                                    success: function(res){
+                                        alert('Success ', res);
+                                    },
+                                    error: function(err){
+                                        // var err = jqXHR;
+                                        alert(err.status);
+                                        //window.location.reload();
+                                        // return err.status;
+                                    }
+                                    
+                                });
+                            });
+                        };
+                    });
+                };
+            });
+        </script>
   </body>
 </html>

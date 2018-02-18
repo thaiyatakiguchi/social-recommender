@@ -1,0 +1,64 @@
+
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- The above 3 meta tags *must* come first in the head; any other head content must come *after* these tags -->
+        <meta name="description" content="">
+        <meta name="author" content="">
+        <title>Social Recommendation</title>
+        <link href="./assets/css/bootstrap.min.css" rel="stylesheet">
+        <link href="./assets/css/font-awesome.min.css" rel="stylesheet">
+    </head>
+  <body>
+    <!-- Fixed navbar -->
+    <div id="includeNav"></div>
+    <div class="container" role="main">
+        <div class="page-header" style="margin-top:60px">
+            <div class="jumbotron">
+                <p>Welcome to "Social Recommendation" experiment</p>
+                <p><a class="btn btn-primary btn-lg" href="makeup.html" role="button">Let's Get Start!</a></p>
+            </div>
+            <div class=row>
+                <div class=col-md-6>
+                    <h1>วัตถุประสงค์</h1>
+                    <ul>
+                        <li>เพื่อใช้ในการเก็บรวบรวมข้อมูลประกอบการทำวิทยานิพนธ์เท่านั้น</li>
+                        <li>เพื่อศึกษาการตัดสินใจเลือกซื้อสินค้าออนไลน์</li>
+                        <li>เพื่อศึกษาปัจจัยสำคัญจากเพื่อนที่มีผลต่อการตัดสินใจ</li>
+                        <li>การศึกษานี้ไม่มีการเผยแพร่ข้อมูลแต่อย่างใด</li>
+                    </ul>
+                </div>
+                <div class="col-md-6">
+                    <h1>ขั้นตอนการทำ Experiment</h1>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                    <li></li>
+                </div>
+            </div>
+        </div>
+        <a href="tel:086-603-2053"><span style="float:right"> 0866032053 </span></a>
+        <a href="https://www.facebook.com/thaiya.takiguchi"><span style="float:right"> สงสัยเพิ่มเติมติดต่อ: Thaiya Takiguchi หรือ&nbsp</span></a>
+        
+    </div> <!-- /container -->
+
+    <script src="./assets/js/jquery.min.js"></script>
+    <script src="./assets/js/bootstrap.min.js"></script>
+    <script>
+        $(function(){
+            $("#includeNav").load("navbar.html");
+        });
+    </script>
+  </body>
+</html>
+<script>
+$(document).ready( function(){
+    var username = localStorage.getItem('username')
+    var rowUsername = '<h1>Hello.. '+username+'</h1>';
+    $('.jumbotron').prepend(rowUsername);
+});
+</script>
